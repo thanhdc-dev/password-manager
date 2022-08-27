@@ -20,24 +20,30 @@ $router->get('/', function () use ($router) {
 });
 
 Route::group(['prefix' => 'api'], function() {
-    Route::group(['prefix' => 'users'], function() {
-        Route::get('/', 'UserController@index');
-        Route::post('/', 'UserController@store');
-        Route::delete('/', 'UserController@destroy');
-        Route::put('restore', 'UserController@restore');
-        Route::group(
-            ['prefix' => '{userId}/passwords'],
-            function() {
-                Route::get('/', 'PasswordController@index');
-                Route::post('/', 'PasswordController@store');
-                Route::delete('/', 'PasswordController@destroy');
-                Route::put('restore', 'PasswordController@restore');
-                Route::get('{id}', 'PasswordController@show');
-                Route::put('{id}', 'PasswordController@update');
-            }
-        );
-        Route::get('{id}', 'UserController@show');
-        Route::put('{id}', 'UserController@update');
+    Route::post('login', 'AuthController@login');
+    Route::post('register', 'AuthController@register');
+
+    Route::group(['middleware' => 'auth'], function() {
+        Route::post('logout', 'AuthController@logout');
+        Route::group(['prefix' => 'users'], function() {
+            Route::get('/', 'UserController@index');
+            Route::post('/', 'UserController@store');
+            Route::delete('/', 'UserController@destroy');
+            Route::put('restore', 'UserController@restore');
+            Route::group(
+                ['prefix' => '{userId}/passwords'],
+                function() {
+                    Route::get('/', 'PasswordController@index');
+                    Route::post('/', 'PasswordController@store');
+                    Route::delete('/', 'PasswordController@destroy');
+                    Route::put('restore', 'PasswordController@restore');
+                    Route::get('{id}', 'PasswordController@show');
+                    Route::put('{id}', 'PasswordController@update');
+                }
+            );
+            Route::get('{id}', 'UserController@show');
+            Route::put('{id}', 'UserController@update');
+        });
     });
 });
 
