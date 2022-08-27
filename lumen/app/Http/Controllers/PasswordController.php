@@ -3,13 +3,15 @@
 namespace App\Http\Controllers;
 
 use Laravel\Lumen\Routing\Controller as BaseController;
+use App\Http\Requests\PasswordValidate;
+use App\Models\Password;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 
-class Controller extends BaseController
+class PasswordController extends BaseController
 {
-    protected $modelClass;
-    protected $validateClass;
+    protected $modelClass = Password::class;
+    protected $validateClass = PasswordValidate::class;
 
     /**
      * Get items
@@ -17,10 +19,12 @@ class Controller extends BaseController
      * @param Request $request
      * @return mixed
      */
-    function index(Request $request) {
+    function index($userId, Request $request) {
         $itemsPerPage = $request->query('itemsPerPage', 10);
-        return $this->modelClass::paginate($itemsPerPage)->toArray();
+        return $this->modelClass::where('user_id', $userId)
+            ->paginate($itemsPerPage)->toArray();
     }
+
 
     /**
      * Show item
@@ -28,9 +32,10 @@ class Controller extends BaseController
      * @param $id
      * @return \Illuminate\Http\JsonResponse
      */
-    function show($id): \Illuminate\Http\JsonResponse
+    function show($userId, $id): \Illuminate\Http\JsonResponse
     {
-        $item = $this->modelClass::where('id', $id)
+        $item = $this->modelClass::where('user_id', $userId)
+            ->where('id', $id)
             ->first();
         return response()->json(['status' => true, 'data' => $item]);
     }
@@ -41,7 +46,7 @@ class Controller extends BaseController
      * @param Request $request
      * @return \Illuminate\Http\JsonResponse
      */
-    function store(Request $request): \Illuminate\Http\JsonResponse
+    function store($userId, Request $request): \Illuminate\Http\JsonResponse
     {
         if (method_exists($this->validateClass, 'storeValidate')) {
             $storeValidate = call_user_func($this->validateClass . '::storeValidate');
@@ -51,7 +56,9 @@ class Controller extends BaseController
             }
         }
 
-        $itemNew = $this->modelClass->fill($request->post());
+        $params = $request->post();
+        $params['user_id'] = $userId;
+        $itemNew = $this->modelClass->fill($params);
         $itemNew->save();
 
         return response()->json(['status' => true, 'data' => $itemNew]);
@@ -64,9 +71,10 @@ class Controller extends BaseController
      * @param Request $request
      * @return \Illuminate\Http\JsonResponse
      */
-    function update($id, Request $request): \Illuminate\Http\JsonResponse
+    function update($userId, $id, Request $request): \Illuminate\Http\JsonResponse
     {
-        $item = $this->modelClass::where('id', $id)
+        $item = $this->modelClass::where('user_id', $userId)
+            ->where('id', $id)
             ->first();
 
         if (!$item) {
@@ -82,11 +90,11 @@ class Controller extends BaseController
      * @param $id
      * @return \Illuminate\Http\JsonResponse
      */
-    function destroy(Request $request): \Illuminate\Http\JsonResponse
+    function destroy($userId, Request $request): \Illuminate\Http\JsonResponse
     {
         $ids = $request->post('ids', []);
-        $items = $this->modelClass::whereIn('id', $ids)->get();
-        $status = $this->modelClass::whereIn('id', $items->pluck('id'))->delete();
+        $items = $this->modelClass::where('user_id', $userId)->whereIn('id', $ids)->get();
+        $status = $this->modelClass::where('user_id', $userId)->whereIn('id', $items->pluck('id'))->delete();
 
         return response()->json(['status' => (boolean)$status, 'data' => $items->pluck('id')]);
     }
@@ -97,11 +105,11 @@ class Controller extends BaseController
      * @param $id
      * @return \Illuminate\Http\JsonResponse
      */
-    function restore(Request $request): \Illuminate\Http\JsonResponse
+    function restore($userId, Request $request): \Illuminate\Http\JsonResponse
     {
         $ids = $request->post('ids', []);
-        $items = $this->modelClass::whereIn('id', $ids)->withTrashed()->get();
-        $status = $this->modelClass::whereIn('id', $items->pluck('id'))->restore();
+        $items = $this->modelClass::where('user_id', $userId)->whereIn('id', $ids)->withTrashed()->get();
+        $status = $this->modelClass::where('user_id', $userId)->whereIn('id', $items->pluck('id'))->restore();
 
         return response()->json(['status' => (boolean)$status, 'data' => $items->pluck('id')]);
     }
