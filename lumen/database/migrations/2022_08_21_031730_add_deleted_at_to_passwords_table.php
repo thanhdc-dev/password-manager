@@ -29,7 +29,7 @@ class AddDeletedAtToPasswordsTable extends Migration
     {
         Schema::table('passwords', function (Blueprint $table) {
             if (Schema::hasColumn('passwords', 'deleted_at')) {
-                $table->dropColumn();
+                $table->dropColumn('deleted_at');
             }
         });
     }

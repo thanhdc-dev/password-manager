@@ -53,4 +53,24 @@ class AuthValidate
             'messages'   => $messages
         ];
     }
+
+    /**
+     * Refresh token validate
+     * @return array
+     */
+    static function refreshTokenValidate(): array
+    {
+        $rules = [
+            'refresh_token' => 'required',
+        ];
+
+        $messages = [
+            'refresh_token.required'  => 'refresh_token là bắt buộc',
+        ];
+
+        return [
+            'rules'     => $rules,
+            'messages'   => $messages
+        ];
+    }
 }

@@ -17,7 +17,7 @@ class CreatePasswordsTable extends Migration
             $table->id();
             $table->integer('user_id')->nullable()->default(0);
             $table->string('url')->nullable()->default('');
-            $table->string('email')->nullable()->default('');
+            $table->string('username')->nullable()->default('');
             $table->string('password')->nullable()->default('');
             $table->string('note')->nullable()->default('');
             $table->timestamps();

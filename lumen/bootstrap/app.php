@@ -60,7 +60,7 @@ $app->singleton(
 */
 
 $app->configure('auth');
-$app->configure('service');;
+$app->configure('service');
 
 /*
 |--------------------------------------------------------------------------
@@ -73,9 +73,9 @@ $app->configure('service');;
 |
 */
 
-// $app->middleware([
-//     App\Http\Middleware\ExampleMiddleware::class
-// ]);
+$app->middleware([
+    App\Http\Middleware\CORSMiddleware::class
+]);
 
 $app->routeMiddleware([
     'auth' => App\Http\Middleware\Authenticate::class,
@@ -92,7 +92,7 @@ $app->routeMiddleware([
 |
 */
 
-// $app->register(App\Providers\AppServiceProvider::class);
+$app->register(App\Providers\AppServiceProvider::class);
 $app->register(App\Providers\AuthServiceProvider::class);
 // $app->register(App\Providers\EventServiceProvider::class);
 $app->register(\Flipbox\LumenGenerator\LumenGeneratorServiceProvider::class);

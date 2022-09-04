@@ -13,7 +13,7 @@ class Password extends Model
         'user_id',
         'url',
         'name',
-        'email',
+        'username',
         'password',
         'note',
         'deleted_at',

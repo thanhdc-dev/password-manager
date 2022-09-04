@@ -24,6 +24,6 @@ class AuthServiceProvider extends ServiceProvider
      */
     public function boot()
     {
-        LumenPassport::routes($this->app, ['prefix' => 'v1/oauth']);
+        LumenPassport::routes($this->app, ['prefix' => 'api/v1/oauth']);
     }
 }

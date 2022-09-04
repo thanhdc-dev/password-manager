@@ -29,7 +29,7 @@ class AddDeletedAtToUsersTable extends Migration
     {
         Schema::table('users', function (Blueprint $table) {
             if (Schema::hasColumn('users', 'deleted_at')) {
-                $table->dropColumn();
+                $table->dropColumn('deleted_at');
             }
         });
     }

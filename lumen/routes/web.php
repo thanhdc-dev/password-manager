@@ -19,12 +19,16 @@ $router->get('/', function () use ($router) {
     return $router->app->version();
 });
 
-Route::group(['prefix' => 'api'], function() {
-    Route::post('login', 'AuthController@login');
-    Route::post('register', 'AuthController@register');
+Route::group(['prefix' => 'api/v1'], function() {
+    Route::group(['prefix' => 'auth'], function() {
+        Route::post('login', 'AuthController@login');
+        Route::post('refresh-token', 'AuthController@refreshToken');
+        Route::post('register', 'AuthController@register');
+    });
 
     Route::group(['middleware' => 'auth'], function() {
-        Route::post('logout', 'AuthController@logout');
+        Route::delete('auth/logout', 'AuthController@logout');
+        Route::get('auth/me', 'AuthController@getUserLogin');
         Route::group(['prefix' => 'users'], function() {
             Route::get('/', 'UserController@index');
             Route::post('/', 'UserController@store');

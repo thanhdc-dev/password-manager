@@ -45,7 +45,7 @@ class Controller extends BaseController
     {
         if (method_exists($this->validateClass, 'storeValidate')) {
             $storeValidate = call_user_func($this->validateClass . '::storeValidate');
-            $validator = Validator::make($request->post(), $storeValidate['rules'], $storeValidate['messages']);
+            $validator = validator($request->post(), $storeValidate['rules'], $storeValidate['messages']);
             if ($validator->fails()) {
                 return response()->json(['status' => false, 'message' => $validator->errors()->first()]);
             }
