@@ -5,8 +5,8 @@ import { Router } from '@angular/router';
 import { ApiMethod, AuthEndPoint } from './const';
 import { LoginPayload, RegisterPayload } from '@core/interfaces/auth';
 import { StorageService } from './storage.service';
-import { BehaviorSubject, Observable, of } from 'rxjs';
-import { catchError, tap, mapTo } from 'rxjs/operators';
+import { Observable, of } from 'rxjs';
+import { catchError, tap, mapTo, map } from 'rxjs/operators';
 
 @Injectable({
   providedIn: 'root'
@@ -92,10 +92,14 @@ export class AuthService {
     }, (err) => console.log(err));
   }
 
-  register(params: RegisterPayload) {
-    this._http.requestCall(AuthEndPoint.REGISTER, ApiMethod.POST, params).subscribe((res: any) => {
-      this._router.navigateByUrl('/login');
-    }, (err) => console.log(err));
+  register(params: RegisterPayload): Observable<boolean> {
+    return this._http.requestCall(AuthEndPoint.REGISTER, ApiMethod.POST, params).pipe(
+      map((res: {status: boolean}) => !!res?.status),
+      catchError(error => {
+        alert(error.error);
+        return of(false);
+      })
+    );
   }
 
   private init() {

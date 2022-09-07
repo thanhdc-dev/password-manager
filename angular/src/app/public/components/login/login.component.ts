@@ -1,16 +1,17 @@
+import { Router } from '@angular/router';
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { AuthService } from '@core/services/auth.service';
+import { BaseComponent } from '@shared/components/base/base.component';
 
 @Component({
   selector: 'app-login',
   templateUrl: './login.component.html',
-  styleUrls: ['./login.component.scss'],
   providers: [
     AuthService
   ]
 })
-export class LoginComponent implements OnInit {
+export class LoginComponent extends BaseComponent implements OnInit {
 
   form: FormGroup = this.fb.group({
     email: [null, [Validators.required, Validators.email]],
@@ -20,7 +21,14 @@ export class LoginComponent implements OnInit {
   constructor(
     private fb: FormBuilder,
     private _authService: AuthService,
-  ) { }
+    private _router: Router,
+  ) {
+    super();
+    const state: any = this._router.getCurrentNavigation()?.extras?.state ?? null;
+    if (typeof state?.form_data != 'undefined') {
+        this.form.patchValue(state.form_data);
+    }
+  }
 
   ngOnInit(): void {
 
@@ -30,7 +38,9 @@ export class LoginComponent implements OnInit {
     if (this.form.invalid) {
       return;
     }
+    this.setLoading(true);
     this._authService.login(this.form.value.email, this.form.value.password).subscribe(isSuccess => {
+      this.setLoading(false);
       if (isSuccess) {
         console.log('Logged in');
       } else {

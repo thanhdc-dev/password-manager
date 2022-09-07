@@ -8,7 +8,7 @@
               <label class="label">Email</label>
               <div class="control has-icons-left has-icons-right">
                 <input class="input" [class.is-danger]="form.controls['email'].invalid" type="email"
-                  placeholder="Email input" value="john@example.com" formControlName="email">
+                  placeholder="john@example.com" formControlName="email">
                 <span class="icon is-small is-left">
                   <mat-icon>mail</mat-icon>
                 </span>
@@ -17,7 +17,7 @@
                   <mat-icon *ngIf="!form.controls['email'].invalid" class="has-text-success">check</mat-icon>
                 </span>
               </div>
-              <p class="help is-danger" *ngIf="form.controls['email'].hasError('required')">Email là bắt buộc</p>
+              <p class="help is-danger" *ngIf="form.controls['email'].hasError('required')">Email is required.</p>
             </div>
             <div class="field">
               <label class="label">Password</label>
@@ -30,10 +30,10 @@
                   <mat-icon *ngIf="form.controls['password'].invalid" class="has-text-warning">error</mat-icon>
                 </span>
               </div>
-              <p class="help is-danger" *ngIf="form.controls['password'].hasError('required')">Mật khẩu là bắt buộc</p>
-              <p class="help is-danger" *ngIf="form.controls['password'].hasError('minlength')">Mật khẩu phải từ 6 ký tự
-              </p>
+              <p class="help is-danger" *ngIf="form.controls['password'].hasError('required')">Password is required.</p>
+              <p class="help is-danger" *ngIf="form.controls['password'].hasError('minlength')">Password is should be minimum 6 characters.</p>
             </div>
+            <!--
             <div class="field">
               <div class="control">
                 <label class="checkbox">
@@ -42,8 +42,10 @@
                 </label>
               </div>
             </div>
-            <div class="field buttons is-right">
-              <button class="button is-success" type="submit">Login</button>
+             -->
+            <div class="field buttons" fxLayout="row" fxLayoutAlign="space-between center">
+              <a href="/register" class="button" type="button" [class.is-loading]="is_loading">Register</a>
+              <button class="button is-success" type="submit" [class.is-loading]="is_loading" [disabled]="is_loading">Login</button>
             </div>
           </form>
         </div>

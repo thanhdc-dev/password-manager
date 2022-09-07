@@ -11,6 +11,10 @@ const routes: Routes = [
     loadChildren: () => import('./public/components/login/login.module').then(m => m.LoginModule)
   },
   {
+    path: 'register',
+    loadChildren: () => import('./public/components/register/register.module').then(m => m.RegisterModule)
+  },
+  {
     path: '',
     canActivate: [AuthGuard],
     loadChildren: () => import('./private/private.module').then(m => m.PrivateModule)
