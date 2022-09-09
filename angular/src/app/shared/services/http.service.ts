@@ -1,4 +1,4 @@
-import { ApiMethod, AuthEndPoint } from './const';
+import { ApiMethod } from './const';
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpErrorResponse } from '@angular/common/http';
 import { environment } from 'src/environments/environment';
@@ -16,7 +16,7 @@ export class HttpService {
     private _http: HttpClient,
   ) { }
 
-  requestCall(api: AuthEndPoint, method: ApiMethod, data?: any): Observable<any> {
+  requestCall(api: string, method: ApiMethod, data?: any): Observable<any> {
     switch (method) {
       case ApiMethod.GET:
         return this._http.get(`${this.API_URL}${api}`)
@@ -34,7 +34,6 @@ export class HttpService {
   }
 
   private handleError(httpErrorResponse: HttpErrorResponse, self: any) {
-    console.log(self);
     if (httpErrorResponse.error instanceof ErrorEvent) {
       console.log('An error occurred: ', httpErrorResponse.error.message);
     } else {

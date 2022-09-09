@@ -12,6 +12,7 @@ const routes: Routes = [
   },
   {
     path: 'register',
+    canActivate: [LoginGuard],
     loadChildren: () => import('./public/components/register/register.module').then(m => m.RegisterModule)
   },
   {

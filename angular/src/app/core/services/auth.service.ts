@@ -1,12 +1,13 @@
 import { TokenService } from './token.service';
 import { Injectable } from '@angular/core';
-import { HttpService } from './http.service';
+import { HttpService } from '@shared/services/http.service';
 import { Router } from '@angular/router';
-import { ApiMethod, AuthEndPoint } from './const';
+import { AuthEndPoint } from './const';
 import { LoginPayload, RegisterPayload } from '@core/interfaces/auth';
 import { StorageService } from './storage.service';
 import { Observable, of } from 'rxjs';
 import { catchError, tap, mapTo, map } from 'rxjs/operators';
+import { ApiMethod } from '@shared/services/const';
 
 @Injectable({
   providedIn: 'root'

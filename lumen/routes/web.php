@@ -48,6 +48,7 @@ Route::group(['prefix' => 'api/v1'], function() {
             Route::get('{id}', 'UserController@show');
             Route::put('{id}', 'UserController@update');
         });
+        Route::get('dashboard', 'DashboardPageController@index');
     });
 });
 

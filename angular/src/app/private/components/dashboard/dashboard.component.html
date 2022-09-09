@@ -15,7 +15,7 @@
                   Accounts
                 </h3>
                 <h1 class="title">
-                  512
+                  {{(statistic?.account_count ?? 0) | number}}
                 </h1>
               </div>
             </div>
@@ -38,7 +38,7 @@
                   Websites
                 </h3>
                 <h1 class="title">
-                  7,770
+                  {{(statistic?.website_count ?? 0) | number}}
                 </h1>
               </div>
             </div>
