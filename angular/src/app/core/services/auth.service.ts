@@ -29,8 +29,12 @@ export class AuthService {
     const params: LoginPayload = { email, password };
     return this._http.requestCall(AuthEndPoint.LOGIN, ApiMethod.POST, params)
       .pipe(
-        tap(res => this.doLogin(res)),
-        mapTo(true),
+        tap(res => {
+          if (!!!res?.status) {
+            this.doLogin(res);
+          }
+        }),
+        map(({status}) => !!status),
         catchError(error => {
           alert(error.error);
           return of(false);

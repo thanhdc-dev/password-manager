@@ -33,6 +33,9 @@
               <p class="help is-danger" *ngIf="form.controls['password'].hasError('required')">Password is required.</p>
               <p class="help is-danger" *ngIf="form.controls['password'].hasError('minlength')">Password is should be minimum 6 characters.</p>
             </div>
+            <div class="field" *ngIf="isInvalidEmailOrPassword">
+              <p class="help is-danger">Email or password is invalid.</p>
+            </div>
             <!--
             <div class="field">
               <div class="control">
@@ -45,7 +48,7 @@
              -->
             <div class="field buttons" fxLayout="row" fxLayoutAlign="space-between center">
               <a href="/register" class="button" type="button" [class.is-loading]="is_loading">Register</a>
-              <button class="button is-success" type="submit" [class.is-loading]="is_loading" [disabled]="is_loading">Login</button>
+              <button class="button is-success" type="submit" [class.is-loading]="is_loading" [disabled]="is_loading || form.invalid">Login</button>
             </div>
           </form>
         </div>

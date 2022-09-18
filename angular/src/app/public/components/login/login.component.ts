@@ -13,6 +13,7 @@ import { BaseComponent } from '@shared/components/base/base.component';
 })
 export class LoginComponent extends BaseComponent implements OnInit {
 
+  isInvalidEmailOrPassword = false;
   form: FormGroup = this.fb.group({
     email: [null, [Validators.required, Validators.email]],
     password: [null, [Validators.required, Validators.minLength(6)]],
@@ -39,12 +40,15 @@ export class LoginComponent extends BaseComponent implements OnInit {
       return;
     }
     this.setLoading(true);
+    if (this.isInvalidEmailOrPassword) {
+      this.isInvalidEmailOrPassword = false;
+    }
     this._authService.login(this.form.value.email, this.form.value.password).subscribe(isSuccess => {
       this.setLoading(false);
       if (isSuccess) {
         console.log('Logged in');
       } else {
-        console.log('Logout');
+        this.isInvalidEmailOrPassword = true;
       }
     });
   }
