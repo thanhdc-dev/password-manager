@@ -36,9 +36,24 @@ html {
 
 html .page-wrapper {
   height: calc(100vh - 64px);
+  overflow: hidden;
   .page-content {
     padding: 30px 15px;
-    margin: 0 auto;
+  }
+
+  .page {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+    .section {
+      padding: 0;
+      &.is-main-section {
+        flex: 1;
+        overflow-x: hidden;
+        overflow-y: auto;
+      }
+    }
   }
 }
 
@@ -208,5 +223,10 @@ html body {
   }
   .b-all {
     border: 1px solid $border;
+  }
+
+  .is-box-shadow {
+    padding: 15px;
+    box-shadow: 5px 10px #888888;
   }
 }

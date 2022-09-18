@@ -43,7 +43,7 @@
   <!-- ============================================================== -->
   <!-- End Topbar - style you can find in pages.scss -->
   <!-- ============================================================== -->
-  <mat-sidenav-container class="example-sidenav-container" [style.marginTop.px]="mobileQuery.matches ? 0 : 0">
+  <mat-sidenav-container class="is-flex is-flex-direction-column is-flex-shrink-1" [style.marginTop.px]="mobileQuery.matches ? 0 : 0">
       <!-- ============================================================== -->
       <!-- Sidebar - style you can find in sidebar.scss -->
       <!-- ============================================================== -->
@@ -60,9 +60,9 @@
       <!-- ============================================================== -->
       <!-- Page container - style you can find in pages.scss -->
       <!-- ============================================================== -->
-      <mat-sidenav-content class="page-wrapper">
+      <mat-sidenav-content class="page-wrapper is-flex is-flex-direction-column is-flex-shrink-1">
 
-              <div class="page-content">
+              <div class="page-content is-flex is-flex-direction-column is-flex-shrink-1 oh">
 
                       <router-outlet></router-outlet>
 

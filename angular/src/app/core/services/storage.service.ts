@@ -15,15 +15,7 @@ export class StorageService {
     this.storage.setItem(this.getAppKey(key), value);
   }
 
-  setItemObject(key: string, object: object) {
-    this.storage.setItem(this.getAppKey(key), JSON.stringify(object));
-  }
-
   getItem(key: string, defaultValue: any = ''): string {
-    return this.storage.getItem(this.getAppKey(key)) ?? defaultValue;
-  }
-
-  getItemObject(key: string, defaultValue: any = null): object {
     return this.storage.getItem(this.getAppKey(key)) ?? defaultValue;
   }
 

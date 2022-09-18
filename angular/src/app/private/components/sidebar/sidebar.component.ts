@@ -3,7 +3,6 @@ import { MediaMatcher } from '@angular/cdk/layout';
 interface MenuItem {
   name: string;
   path: string;
-  iconClass: string;
   icon: string;
 }
 @Component({
@@ -38,9 +37,13 @@ export class SidebarComponent implements OnInit {
       {
         name: 'Dashboard',
         path: '/dashboard',
-        iconClass: 'fas fa-tv',
         icon: 'av_timer',
-      }
+      },
+      {
+        name: 'Password',
+        path: '/password',
+        icon: 'password',
+      },
     ]
   }
 

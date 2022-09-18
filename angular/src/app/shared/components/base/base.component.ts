@@ -3,7 +3,7 @@ import { ColumnInterface } from "../table/interfaces/column.interface";
 
 @Injectable()
 export class BaseComponent implements OnInit {
-  private _is_loading = false;
+  private _isLoading = false;
   private _columns: ColumnInterface[] = [];
   private _dataSource: any = [];
   private _pageIndex: number = 0;
@@ -17,11 +17,11 @@ export class BaseComponent implements OnInit {
   }
 
   setLoading(isLoading: boolean) {
-    this._is_loading = isLoading;
+    this._isLoading = isLoading;
   }
 
-  get is_loading(): boolean {
-    return this._is_loading;
+  get isLoading(): boolean {
+    return this._isLoading;
   }
 
   setColumns(columns: ColumnInterface[]) {

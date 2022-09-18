@@ -51,16 +51,21 @@ export class AuthService {
       this._token.saveToken(data?.access_token);
       this._token.saveRefreshToken(data?.refresh_token);
       this._router.navigateByUrl('/dashboard');
-      this.getUserLogin();
+      this.fetchUserLogin();
     }
   }
 
-  getUserLogin() {
+  fetchUserLogin() {
     this._http.requestCall(AuthEndPoint.CURRENT_USER, ApiMethod.GET).subscribe(res => {
       if (res.data) {
-        this._storage.setItem('user', JSON.stringify(res.data));
+        this._storage.setItem('user', res.data);
       }
     });
+  }
+
+  getUserLogin() {
+    const userData = this._storage.getItem('user');
+    return JSON.parse(userData);
   }
 
   logout(): Observable<boolean> {

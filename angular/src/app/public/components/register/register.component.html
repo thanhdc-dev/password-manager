@@ -68,7 +68,7 @@
               <p class="help is-danger" *ngIf="form.controls['re_password'].hasError('password_match')">Re password is doesn't match.</p>
             </div>
             <div class="field buttons is-right">
-              <button class="button is-success" type="submit" [class.is-loading]="is_loading" [disabled]="is_loading">Register</button>
+              <button class="button is-success" type="submit" [class.is-loading]="isLoading" [disabled]="isLoading">Register</button>
             </div>
           </form>
         </div>
