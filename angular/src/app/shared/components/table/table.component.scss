@@ -1,5 +1,19 @@
+:host {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  margin-bottom: 60px;
+}
+
 .app-table {
   position: relative;
+  overflow: auto;
+}
+
+.table {
+  min-width: 100%;
+  width: max-content;
+  margin-bottom: 0;
 }
 
 .loading-shade {
@@ -18,4 +32,39 @@
 .mat-header-cell,
 .mat-cell {
   vertical-align: middle;
+}
+
+.mat-column-index {
+  width: 100px;
+}
+
+.mat-column-action {
+  width: 50px;
+  .action-container {
+    opacity: 0;
+    width: 0;
+    overflow: hidden;
+    position: absolute;
+    right: 100%;
+    top: 0;
+    height: 100%;
+    transition: all 0.4s;
+    background-color: #fafafa;
+  }
+  .action-trigger {
+    &:hover {
+      .action-container {
+        opacity: 1;
+        width: 100px;
+      }
+    }
+  }
+}
+
+
+.mat-paginator {
+  position: absolute;
+  top: 100%;
+  left: 0;
+  right: 0;
 }

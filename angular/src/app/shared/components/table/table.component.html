@@ -6,36 +6,47 @@
   <table mat-table [dataSource]="dataSource" matSort matSortDirection="desc"
     class="table is-narrow is-hoverable is-fullwidth">
 
-    <ng-container *ngFor="let column of columns" [matColumnDef]="column.name">
+    <!-- Col -->
+    <ng-container *ngFor="let column of columns" [matColumnDef]="column.name" [sticky]="column.name == 'index'">
+      <!-- Header -->
       <th mat-header-cell *matHeaderCellDef mat-sort-header>
         {{column.title}}
       </th>
 
       <ng-container *ngIf="column.name == 'index'; else elseBlockColumnName">
+        <!-- Index Cell -->
         <td mat-cell *matCellDef="let element; let i = index;">{{(i + 1) + (pageSize * pageIndex)}}</td>
       </ng-container>
       <ng-template #elseBlockColumnName>
+        <!-- Other Cell -->
         <td mat-cell *matCellDef="let row" (click)="onCellClicked(row, column.name)">
-          <ng-container *ngIf="hasCell(row); else elseBlockHasCell">
-            {{column?.cell!(row)}}
-          </ng-container>
-          <ng-template #elseBlockHasCell>
-            {{row?.[column.name]}}
-          </ng-template>
+          {{row?.displayed_cell?.[column.name]}}
         </td>
       </ng-template>
     </ng-container>
 
-    <!-- paginator row -->
-    <ng-container matColumnDef="paginator">
-      <td mat-footer-cell *matFooterCellDef [colSpan]="columns.length">
-        <mat-paginator #pageChange showFirstLastButtons aria-label="Select page" [pageSizeOptions]="pageSizeOptions"
-          [pageIndex]="pageIndex" [pageSize]="pageSize" [length]="total"></mat-paginator>
+    <!-- Action col -->
+    <ng-container matColumnDef="action" stickyEnd>
+      <!-- Action Header -->
+      <th mat-header-cell *matHeaderCellDef sty></th>
+      <!-- Action Cell -->
+      <td mat-cell *matCellDef="let row; index as i">
+        <div class="action-trigger">
+          <mat-icon class="is-clickable">more_vert</mat-icon>
+          <div class="action-container buttons">
+            <button class="action" mat-icon-button *ngFor="let action of displayedActions"
+              [matTooltip]="action.title" matTooltipPosition="above" matTooltipHideDelay="100"
+              (click)="onActionClicked(action.name, row?.id)">
+              <mat-icon>{{action.icon}}</mat-icon>
+            </button>
+          </div>
+        </div>
       </td>
     </ng-container>
 
     <tr mat-header-row *matHeaderRowDef="displayedColumns; sticky: true"></tr>
     <tr mat-row *matRowDef="let row; columns: displayedColumns;" (click)="onRowClicked(row)"></tr>
-    <tr mat-footer-row *matFooterRowDef="['paginator']; sticky: true"></tr>
   </table>
 </div>
+<mat-paginator #pageChange showFirstLastButtons aria-label="Select page" [pageSizeOptions]="pageSizeOptions"
+  [pageIndex]="pageIndex" [pageSize]="pageSize" [length]="total"></mat-paginator>
