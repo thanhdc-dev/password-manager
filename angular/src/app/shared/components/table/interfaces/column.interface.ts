@@ -1,5 +1,6 @@
 export interface ColumnInterface {
-  title: string;
-  name: string;
-  cell?(row: any): any
+  readonly title: string;
+  readonly name: string;
+  cellFn?(row: any): any;
+  [propName: string]: any;
 }
