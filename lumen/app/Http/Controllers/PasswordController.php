@@ -21,8 +21,10 @@ class PasswordController extends BaseController
      */
     function index($userId, Request $request) {
         $itemsPerPage = $request->query('itemsPerPage', 10);
-        return $this->modelClass::where('user_id', $userId)
+        $res = $this->modelClass::where('user_id', $userId)
             ->paginate($itemsPerPage)->toArray();
+        $res['status'] = true;
+        return response()->json($res);
     }
 
 
@@ -58,7 +60,8 @@ class PasswordController extends BaseController
 
         $params = $request->post();
         $params['user_id'] = $userId;
-        $itemNew = $this->modelClass->fill($params);
+        $model = new $this->modelClass();
+        $itemNew = $model->fill($params);
         $itemNew->save();
 
         return response()->json(['status' => true, 'data' => $itemNew]);
@@ -81,7 +84,7 @@ class PasswordController extends BaseController
             return response()->json(['status' => false, 'data' => null]);
         }
         $item->fill($request->post())->save();
-        return response()->json(['status' => false, 'data' => $item]);
+        return response()->json(['status' => true, 'data' => $item]);
     }
 
     /**

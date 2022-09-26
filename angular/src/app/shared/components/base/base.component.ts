@@ -1,16 +1,27 @@
-import { Injectable, OnInit } from "@angular/core";
+import { Directive, Injector, OnInit } from "@angular/core";
 import { ColumnInterface } from "../table/interfaces/column.interface";
+import { ActionInterface } from '../table/interfaces/action.interface';
+import { ModalConfirmComponent } from "../modal-confirm/modal-confirm.component";
+import { MatDialog } from "@angular/material/dialog";
+import { BaseService } from "@shared/services/base.service";
 
-@Injectable()
+@Directive()
 export class BaseComponent implements OnInit {
   private _isLoading = false;
   private _columns: ColumnInterface[] = [];
+  private _actions: ActionInterface[] = [];
   private _dataSource: any = [];
   private _pageIndex: number = 0;
   private _total: number = 0;
   private _pageSize: number = 5;
   private _pageSizeOptions: number[] = [5, 10, 20, 100, 500];
-  constructor() { }
+  public actionFn: any = {};
+  dialog: MatDialog;
+  service: BaseService;
+  constructor(injector: Injector) {
+    this.dialog = injector.get(MatDialog);
+    this.service = injector.get(BaseService);
+  }
 
   ngOnInit(): void {
 
@@ -24,10 +35,6 @@ export class BaseComponent implements OnInit {
     return this._isLoading;
   }
 
-  setColumns(columns: ColumnInterface[]) {
-    this._columns = columns;
-  }
-
   get dataSource(): any[] {
     return this._dataSource;
   }
@@ -38,6 +45,18 @@ export class BaseComponent implements OnInit {
 
   get columns(): ColumnInterface[] {
     return this._columns;
+  }
+
+  setColumns(columns: ColumnInterface[]) {
+    this._columns = columns;
+  }
+
+  get actions(): ActionInterface[] {
+    return this._actions;
+  }
+
+  setActions(actions: ActionInterface[]) {
+    this._actions = actions;
   }
 
   get pageIndex(): number {
@@ -64,7 +83,7 @@ export class BaseComponent implements OnInit {
     this._total = total;
   }
 
-  get pageSizeOptions(): number[]{
+  get pageSizeOptions(): number[] {
     return this._pageSizeOptions;
   }
 
@@ -75,5 +94,40 @@ export class BaseComponent implements OnInit {
   generateData(res: any) {
     this.setTotal(res?.total ?? 0);
     this.setDataSource(res?.data ?? []);
+  }
+
+  onActionClicked(event: { name: string, id: number }) {
+    this.callFn(event.name, event.id);
+  }
+
+  callFn(actionName: string, id: number) {
+    if (typeof this.actionFn[actionName] == 'function') {
+      this.actionFn[actionName](id);
+    }
+  }
+
+  setService(_service: BaseService) {
+    this.service = _service;
+  }
+
+  /**
+   * Xóa 1 dòng dữ liệu
+   */
+  actionDelete(rowId: number) {
+    this.dialog.open(ModalConfirmComponent, {
+      width: '400px',
+      data: {
+        title: 'Confirm',
+        message: 'Delete account ?'
+      }
+    }).afterClosed().subscribe(isOk => {
+      if (isOk) {
+        this.setLoading(true);
+        this.service.delete([rowId]).subscribe(res => {
+          this.setLoading(false);
+          console.log(res?.status ? 'delete success' : 'delete fail');
+        });
+      }
+    })
   }
 }

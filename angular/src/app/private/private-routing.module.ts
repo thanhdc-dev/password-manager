@@ -12,6 +12,10 @@ const routes: Routes = [
         path: 'dashboard',
         loadChildren: () => import('./components/dashboard/dashboard.module').then(m => m.DashboardModule)
       },
+      {
+        path: 'password',
+        loadChildren: () => import('./components/password/password.module').then(m => m.PasswordModule)
+      },
       { path: '', redirectTo: 'dashboard', pathMatch: 'full' },
       { path: '**', component: PageNotFoundComponent },
     ]
