@@ -1,5 +1,5 @@
 import { TokenService } from './token.service';
-import { Injectable } from '@angular/core';
+import { Injectable, Injector } from '@angular/core';
 import { HttpService } from '@shared/services/http.service';
 import { Router } from '@angular/router';
 import { AuthEndPoint } from './const';
@@ -12,22 +12,23 @@ import { ApiMethod } from '@shared/services/const';
 @Injectable({
   providedIn: 'root'
 })
-export class AuthService {
+export class AuthService extends HttpService {
 
   user: any = {};
 
   constructor(
-    private _http: HttpService,
+    injector: Injector,
     private _token: TokenService,
     private _storage: StorageService,
     private _router: Router,
   ) {
+    super(injector);
     this.init();
   }
 
   login(email: string, password: string): Observable<boolean> {
     const params: LoginPayload = { email, password };
-    return this._http.requestCall(AuthEndPoint.LOGIN, ApiMethod.POST, params)
+    return this.requestCall(AuthEndPoint.LOGIN, ApiMethod.POST, params)
       .pipe(
         tap(res => {
           if (!!!res?.status) {
@@ -56,20 +57,20 @@ export class AuthService {
   }
 
   fetchUserLogin() {
-    this._http.requestCall(AuthEndPoint.CURRENT_USER, ApiMethod.GET).subscribe(res => {
+    this.requestCall(AuthEndPoint.CURRENT_USER, ApiMethod.GET).subscribe(res => {
       if (res.data) {
-        this._storage.setItem('user', res.data);
+        this._storage.setItem('user', JSON.stringify(res.data));
       }
     });
   }
 
-  getUserLogin() {
+  getUserLogin(): any {
     const userData = this._storage.getItem('user');
     return JSON.parse(userData);
   }
 
   logout(): Observable<boolean> {
-    return this._http.requestCall(AuthEndPoint.LOGOUT, ApiMethod.DELETE)
+    return this.requestCall(AuthEndPoint.LOGOUT, ApiMethod.DELETE)
       .pipe(
         tap(e => this.doLogout()),
         mapTo(true),
@@ -82,7 +83,7 @@ export class AuthService {
 
   refreshToken() {
     const params = { refresh_token: this._token.getRefreshToken() };
-    return this._http.requestCall(AuthEndPoint.REFRESH_TOKEN, ApiMethod.POST, params)
+    return this.requestCall(AuthEndPoint.REFRESH_TOKEN, ApiMethod.POST, params)
       .pipe(
         tap((res) => this._token.saveRefreshToken(res.token))
       )
@@ -95,7 +96,7 @@ export class AuthService {
   }
 
   currentUser() {
-    this._http.requestCall(AuthEndPoint.CURRENT_USER, ApiMethod.GET).subscribe((res: any) => {
+    this.requestCall(AuthEndPoint.CURRENT_USER, ApiMethod.GET).subscribe((res: any) => {
       if (res?.data) {
         this._storage.setItem('user', JSON.stringify(res.data));
       }
@@ -103,7 +104,7 @@ export class AuthService {
   }
 
   register(params: RegisterPayload): Observable<boolean> {
-    return this._http.requestCall(AuthEndPoint.REGISTER, ApiMethod.POST, params).pipe(
+    return this.requestCall(AuthEndPoint.REGISTER, ApiMethod.POST, params).pipe(
       map((res: {status: boolean}) => !!res?.status),
       catchError(error => {
         alert(error.error);

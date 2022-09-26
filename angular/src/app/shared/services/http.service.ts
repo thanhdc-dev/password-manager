@@ -1,5 +1,5 @@
 import { ApiMethod } from './const';
-import { Injectable } from '@angular/core';
+import { Injectable, Injector } from '@angular/core';
 import { HttpClient, HttpErrorResponse } from '@angular/common/http';
 import { environment } from 'src/environments/environment';
 import { catchError } from 'rxjs/operators';
@@ -11,10 +11,11 @@ import { Observable } from 'rxjs';
 export class HttpService {
 
   private readonly API_URL = environment.apiUrl;
+  _http: HttpClient;
 
-  constructor(
-    private _http: HttpClient,
-  ) { }
+  constructor(injector: Injector) {
+    this._http = injector.get(HttpClient);
+  }
 
   requestCall(api: string, method: ApiMethod, parameter?: any): Observable<any> {
     switch (method) {
