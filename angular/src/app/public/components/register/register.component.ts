@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, Injector } from '@angular/core';
 import { AbstractControl, FormBuilder, FormControl, FormGroup, ValidationErrors, ValidatorFn, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { AuthService } from '@core/services/auth.service';
@@ -21,8 +21,9 @@ export class RegisterComponent extends BaseComponent implements OnInit {
     private _fb: FormBuilder,
     private _authService: AuthService,
     private _router: Router,
+    injector: Injector
   ) {
-    super();
+    super(injector);
   }
 
   ngOnInit(): void {

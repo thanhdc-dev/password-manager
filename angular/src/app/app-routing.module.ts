@@ -20,6 +20,7 @@ const routes: Routes = [
     canActivate: [AuthGuard],
     loadChildren: () => import('./private/private.module').then(m => m.PrivateModule)
   },
+  { path: 'password', loadChildren: () => import('./private/components/password/password.module').then(m => m.PasswordModule) },
   { path: '**', component: PageNotFoundComponent },
 ];
 

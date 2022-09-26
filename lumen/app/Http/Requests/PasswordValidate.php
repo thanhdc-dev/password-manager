@@ -13,14 +13,13 @@ class PasswordValidate
     {
         $rules = [
             'url' => 'required',
-            'email' => 'required|email',
+            'username' => 'required',
             'password' => 'required',
         ];
 
         $messages = [
             'url.required'  => 'URL là bắt buộc',
-            'email.required'  => 'Email là bắt buộc',
-            'email.email'  => 'Email không đúng',
+            'username.required'  => 'Email là bắt buộc',
             'password.required'  => 'Mật khẩu là bắt buộc',
         ];
 

@@ -1,14 +1,17 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { HttpClientModule } from '@angular/common/http';
+import { ModalConfirmComponent } from './modal-confirm.component';
 import { MatDialogModule } from '@angular/material/dialog';
 
+
+
 @NgModule({
-  declarations: [],
+  declarations: [
+    ModalConfirmComponent
+  ],
   imports: [
     CommonModule,
-    HttpClientModule,
     MatDialogModule,
   ]
 })
-export class CoreModule { }
+export class ModalConfirmModule { }

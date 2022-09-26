@@ -1,5 +1,5 @@
 import { Router } from '@angular/router';
-import { Component, OnInit } from '@angular/core';
+import { Component, Injector, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { AuthService } from '@core/services/auth.service';
 import { BaseComponent } from '@shared/components/base/base.component';
@@ -23,8 +23,9 @@ export class LoginComponent extends BaseComponent implements OnInit {
     private fb: FormBuilder,
     private _authService: AuthService,
     private _router: Router,
+    injector: Injector
   ) {
-    super();
+    super(injector);
     const state: any = this._router.getCurrentNavigation()?.extras?.state ?? null;
     if (typeof state?.form_data != 'undefined') {
         this.form.patchValue(state.form_data);

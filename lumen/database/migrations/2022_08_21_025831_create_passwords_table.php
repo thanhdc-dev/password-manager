@@ -16,7 +16,7 @@ class CreatePasswordsTable extends Migration
         Schema::create('passwords', function (Blueprint $table) {
             $table->id();
             $table->integer('user_id')->nullable()->default(0);
-            $table->string('url')->nullable()->default('');
+            $table->text('url')->nullable();
             $table->string('username')->nullable()->default('');
             $table->string('password')->nullable()->default('');
             $table->string('note')->nullable()->default('');
