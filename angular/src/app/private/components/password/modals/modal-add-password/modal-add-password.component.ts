@@ -15,9 +15,8 @@ import { UserPasswordService } from '@private/services/user-password.service';
 export class ModalAddPasswordComponent implements OnInit {
   action: string = 'add';
   title: string = 'Password';
-  id: number = 0;
+  uuid: string = '';
   form: FormGroup = this.fb.group({
-    user_id: [this.authService.getUserLogin()?.id, Validators.required],
     url: [null, Validators.required],
     username: [null, Validators.required],
     password: [null, Validators.required],
@@ -27,7 +26,6 @@ export class ModalAddPasswordComponent implements OnInit {
   constructor(
     @Inject(MAT_DIALOG_DATA) private data: any,
     public dialogRef: MatDialogRef<ModalAddPasswordComponent>,
-    private authService: AuthService,
     private fb: FormBuilder,
     private userPasswordService: UserPasswordService,
   ) {
@@ -37,14 +35,14 @@ export class ModalAddPasswordComponent implements OnInit {
     if (this.data?.action) {
       this.action = this.data.action;
     }
-    if (this.data?.id) {
-      this.id = this.data.id;
+    if (this.data?.uuid) {
+      this.uuid = this.data.uuid;
       this.getDetail();
     }
   }
 
   getDetail() {
-    this.userPasswordService.show(this.id).subscribe(res => this.form.patchValue(res?.data));
+    this.userPasswordService.show(this.uuid).subscribe(res => this.form.patchValue(res?.data));
   }
 
   close(data: any = false) {
@@ -61,7 +59,7 @@ export class ModalAddPasswordComponent implements OnInit {
           }
         });
       } else {
-        this.userPasswordService.update(this.id, params).subscribe(res => {
+        this.userPasswordService.update(this.uuid, params).subscribe(res => {
           if (res.status) {
             this.close(true);
           }

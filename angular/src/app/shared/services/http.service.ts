@@ -26,7 +26,7 @@ export class HttpService {
         return this._http.post(`${this.API_URL}${api}`, parameter)
         .pipe(catchError(async (err) => this.handleError(err, this)));
       case ApiMethod.DELETE:
-        return this._http.delete(`${this.API_URL}${api}`, parameter)
+        return this._http.delete(`${this.API_URL}${api}`, {body: parameter})
         .pipe(catchError(async (err) => this.handleError(err, this)));
       case ApiMethod.PUT:
         return this._http.put(`${this.API_URL}${api}`, parameter)

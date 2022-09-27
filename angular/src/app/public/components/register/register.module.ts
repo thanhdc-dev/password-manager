@@ -4,6 +4,7 @@ import { RegisterComponent } from './register.component';
 import { RegisterRoutingModule } from './register-routing.module';
 import { MatIconModule } from '@angular/material/icon';
 import { ReactiveFormsModule } from '@angular/forms';
+import { FlexLayoutModule } from '@angular/flex-layout';
 
 
 
@@ -15,7 +16,8 @@ import { ReactiveFormsModule } from '@angular/forms';
     CommonModule,
     RegisterRoutingModule,
     MatIconModule,
-    ReactiveFormsModule
+    ReactiveFormsModule,
+    FlexLayoutModule,
   ]
 })
 export class RegisterModule { }

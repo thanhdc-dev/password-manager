@@ -11,13 +11,6 @@ export class UserPasswordService extends BaseService {
     private authService: AuthService
   ) {
     super(injector);
-    this.setUp();
-  }
-
-  setUp(): void {
-    const user: any = this.authService.getUserLogin();
-    const userId = user?.id ?? 0;
-    const endPoint = `/users/${userId}/passwords`;
-    this.setEndPoint(endPoint);
+    this.setEndPoint(`/user-passwords`);
   }
 }

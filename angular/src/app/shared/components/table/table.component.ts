@@ -6,19 +6,13 @@ import { tap } from 'rxjs/operators';
 import { ActionInterface } from './interfaces/action.interface';
 import { ColumnInterface } from './interfaces/column.interface';
 
-export interface PeriodicElement {
-  name: string;
-  position: number;
-  weight: number;
-  symbol: string;
-}
-
 @Component({
   selector: 'app-table',
   styleUrls: ['table.component.scss'],
   templateUrl: 'table.component.html',
 })
 export class TableComponent implements OnChanges, AfterViewInit {
+  @Input() uuidKeyName: string = 'uuid';
   @Input() isLoading: boolean = false;
   @Input() pageIndex: number = 0;
   @Input() pageSize: number = 5;
@@ -34,7 +28,7 @@ export class TableComponent implements OnChanges, AfterViewInit {
   @ViewChild(MatSort) sort!: MatSort;
 
   @Output() pageChange = new EventEmitter<{pageIndex: number, pageSize: number}>();
-  @Output() actionClicked = new EventEmitter<{name: string, id: number}>();
+  @Output() actionClicked = new EventEmitter<{name: string, uuid: string}>();
 
   ngOnChanges(changes: SimpleChanges): void {
     if (changes?.columns && Array.isArray(changes.columns.currentValue)) {
@@ -71,8 +65,8 @@ export class TableComponent implements OnChanges, AfterViewInit {
     // console.log('Cell clicked: ', row, columnName);
   }
 
-  onActionClicked(actionName: string, rowId: number) {
+  onActionClicked(actionName: string, rowUuid: string) {
     console.log(`Action ${actionName} clicked`);
-    this.actionClicked.emit({name: actionName, id: rowId});
+    this.actionClicked.emit({name: actionName, uuid: rowUuid});
   }
 }

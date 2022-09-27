@@ -9,16 +9,26 @@ class Model extends BaseModel
 {
     protected $uuidKey = 'uuid';
 
+    function __construct()
+    {
+        parent::__construct();
+        $this->makeHidden(array($this->getKeyName()));
+    }
+
     static function boot() {
         parent::boot();
 
         self::creating(function($model) {
-            $model->setAttribute($this->uuidKey, (string) Str::uuid());
+            $model->setAttribute($model->getUuidKeyName(), (string) Str::uuid());
         });
     }
 
     function getRouteKeyName()
     {
+        return $this->uuidKey;
+    }
+
+    function getUuidKeyName() {
         return $this->uuidKey;
     }
 }

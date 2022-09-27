@@ -8,6 +8,12 @@ class Password extends Model
 {
     use SoftDeletes;
 
+    function __construct()
+    {
+        parent::__construct();
+        $this->makeHidden(array('user_id'));
+    }
+
     protected $fillable = [
         'user_id',
         'url',

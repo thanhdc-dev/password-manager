@@ -21,6 +21,7 @@ export class BaseComponent implements OnInit {
   constructor(injector: Injector) {
     this.dialog = injector.get(MatDialog);
     this.service = injector.get(BaseService);
+    this.actionFn['actionDelete'] = this.actionDelete.bind(this);
   }
 
   ngOnInit(): void {
@@ -96,13 +97,13 @@ export class BaseComponent implements OnInit {
     this.setDataSource(res?.data ?? []);
   }
 
-  onActionClicked(event: { name: string, id: number }) {
-    this.callFn(event.name, event.id);
+  onActionClicked(event: { name: string, uuid: string }) {
+    this.callFn(event.name, event.uuid);
   }
 
-  callFn(actionName: string, id: number) {
+  callFn(actionName: string, uuid: string) {
     if (typeof this.actionFn[actionName] == 'function') {
-      this.actionFn[actionName](id);
+      this.actionFn[actionName](uuid);
     }
   }
 
@@ -110,10 +111,33 @@ export class BaseComponent implements OnInit {
     this.service = _service;
   }
 
+  onPageChange(event: {pageIndex: number, pageSize: number}) {
+    this.setPageIndex(event.pageIndex);
+    this.setPageSize(event.pageSize);
+    this.getData();
+  }
+
+  /**
+   * Get data from api service
+   */
+  getData() {
+    const params = {
+      itemsPerPage: this.pageSize,
+      page: this.pageIndex + 1
+    }
+    this.setLoading(true);
+    this.service.index(params).subscribe(res => {
+      this.setLoading(false);
+      if (res?.status) {
+        this.generateData(res);
+      }
+    });
+  }
+
   /**
    * Xóa 1 dòng dữ liệu
    */
-  actionDelete(rowId: number) {
+  actionDelete(rowUuid: string) {
     this.dialog.open(ModalConfirmComponent, {
       width: '400px',
       data: {
@@ -123,9 +147,12 @@ export class BaseComponent implements OnInit {
     }).afterClosed().subscribe(isOk => {
       if (isOk) {
         this.setLoading(true);
-        this.service.delete([rowId]).subscribe(res => {
+        this.service.delete([rowUuid]).subscribe(res => {
           this.setLoading(false);
           console.log(res?.status ? 'delete success' : 'delete fail');
+          if (res?.status) {
+            this.getData();
+          }
         });
       }
     })

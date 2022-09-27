@@ -34,19 +34,16 @@ Route::group(['prefix' => 'api/v1'], function() {
             Route::post('/', 'UserController@store');
             Route::delete('/', 'UserController@destroy');
             Route::put('restore', 'UserController@restore');
-            Route::group(
-                ['prefix' => '{userId}/passwords'],
-                function() {
-                    Route::get('/', 'PasswordController@index');
-                    Route::post('/', 'PasswordController@store');
-                    Route::delete('/', 'PasswordController@destroy');
-                    Route::put('restore', 'PasswordController@restore');
-                    Route::get('{id}', 'PasswordController@show');
-                    Route::put('{id}', 'PasswordController@update');
-                }
-            );
-            Route::get('{id}', 'UserController@show');
-            Route::put('{id}', 'UserController@update');
+            Route::get('{uuid}', 'UserController@show');
+            Route::put('{uuid}', 'UserController@update');
+        });
+        Route::group(['prefix' => 'user-passwords'], function() {
+            Route::get('/', 'PasswordController@index');
+            Route::post('/', 'PasswordController@store');
+            Route::delete('/', 'PasswordController@destroy');
+            Route::put('restore', 'PasswordController@restore');
+            Route::get('{uuid}', 'PasswordController@show');
+            Route::put('{uuid}', 'PasswordController@update');
         });
         Route::get('dashboard', 'DashboardPageController@index');
     });

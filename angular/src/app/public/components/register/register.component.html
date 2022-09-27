@@ -67,7 +67,8 @@
               <p class="help is-danger" *ngIf="form.controls['re_password'].hasError('minlength')">Re password is should be minimum 6 characters.</p>
               <p class="help is-danger" *ngIf="form.controls['re_password'].hasError('password_match')">Re password is doesn't match.</p>
             </div>
-            <div class="field buttons is-right">
+            <div class="field buttons" fxLayout="row" fxLayoutAlign="space-between center">
+              <a href="/login" class="button" type="button" [class.is-loading]="isLoading">Login</a>
               <button class="button is-success" type="submit" [class.is-loading]="isLoading" [disabled]="isLoading">Register</button>
             </div>
           </form>

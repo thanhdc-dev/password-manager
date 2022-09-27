@@ -4,12 +4,19 @@ namespace App\Http\Controllers;
 
 use Laravel\Lumen\Routing\Controller as BaseController;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Validator;
 
 class Controller extends BaseController
 {
     protected $modelClass;
     protected $validateClass;
+    protected $model;
+
+    function __construct()
+    {
+        if (class_exists($this->modelClass)) {
+            $this->model = new $this->modelClass;
+        }
+    }
 
     /**
      * Get items
@@ -19,18 +26,18 @@ class Controller extends BaseController
      */
     function index(Request $request) {
         $itemsPerPage = $request->query('itemsPerPage', 10);
-        return $this->modelClass::paginate($itemsPerPage)->toArray();
+        return $this->model::paginate($itemsPerPage)->toArray();
     }
 
     /**
      * Show item
      *
-     * @param $id
+     * @param $uuid
      * @return \Illuminate\Http\JsonResponse
      */
-    function show($id): \Illuminate\Http\JsonResponse
+    function show($uuid): \Illuminate\Http\JsonResponse
     {
-        $item = $this->modelClass::where('id', $id)
+        $item = $this->model::where($this->model->getUuidKeyName(), $uuid)
             ->first();
         return response()->json(['status' => true, 'data' => $item]);
     }
@@ -60,35 +67,40 @@ class Controller extends BaseController
     /**
      * Update item
      *
-     * @param $id
+     * @param $uuid
      * @param Request $request
      * @return \Illuminate\Http\JsonResponse
      */
-    function update($id, Request $request): \Illuminate\Http\JsonResponse
+    function update($uuid, Request $request): \Illuminate\Http\JsonResponse
     {
-        $item = $this->modelClass::where('id', $id)
+        $item = $this->model::where($this->model->getUuidKeyName(), $uuid)
             ->first();
 
         if (!$item) {
             return response()->json(['status' => false, 'data' => null]);
         }
         $item->fill($request->post())->save();
-        return response()->json(['status' => false, 'data' => $item]);
+        return response()->json(['status' => true, 'data' => $item]);
     }
 
     /**
      * Destroy item
      *
-     * @param $id
+     * @param Request $request
      * @return \Illuminate\Http\JsonResponse
      */
     function destroy(Request $request): \Illuminate\Http\JsonResponse
     {
-        $ids = $request->post('ids', []);
-        $items = $this->modelClass::whereIn('id', $ids)->get();
-        $status = $this->modelClass::whereIn('id', $items->pluck('id'))->delete();
+        $uuidKeyName = $this->model->getUuidKeyName();
+        $uuids = $request->post('uuids', []);
+        $items = $this->model::whereIn($uuidKeyName, $uuids)->get();
+        $deleteUuids = $items->pluck($uuidKeyName);
+        $status = false;
+        if ($items->count()) {
+            $status = $this->model::whereIn($uuidKeyName, $deleteUuids)->delete();
+        }
 
-        return response()->json(['status' => (boolean)$status, 'data' => $items->pluck('id')]);
+        return response()->json(['status' => (boolean)$status, 'data' => $deleteUuids]);
     }
 
     /**
@@ -99,10 +111,15 @@ class Controller extends BaseController
      */
     function restore(Request $request): \Illuminate\Http\JsonResponse
     {
-        $ids = $request->post('ids', []);
-        $items = $this->modelClass::whereIn('id', $ids)->withTrashed()->get();
-        $status = $this->modelClass::whereIn('id', $items->pluck('id'))->restore();
+        $uuidKeyName = $this->model->getUuidKeyName();
+        $uuids = $request->post('uuids', []);
+        $items = $this->model::whereIn($uuidKeyName, $uuids)->withTrashed()->get();
+        $restoreUuids = $items->pluck($uuidKeyName);
+        $status = false;
+        if ($items->count()) {
+            $status = $items->toQuery()->restore();
+        }
 
-        return response()->json(['status' => (boolean)$status, 'data' => $items->pluck('id')]);
+        return response()->json(['status' => (boolean)$status, 'data' => $restoreUuids]);
     }
 }

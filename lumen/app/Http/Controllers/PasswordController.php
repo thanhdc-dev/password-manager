@@ -2,13 +2,12 @@
 
 namespace App\Http\Controllers;
 
-use Laravel\Lumen\Routing\Controller as BaseController;
 use App\Http\Requests\PasswordValidate;
 use App\Models\Password;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Validator;
+use Illuminate\Support\Facades\Auth;
 
-class PasswordController extends BaseController
+class PasswordController extends Controller
 {
     protected $modelClass = Password::class;
     protected $validateClass = PasswordValidate::class;
@@ -19,9 +18,9 @@ class PasswordController extends BaseController
      * @param Request $request
      * @return mixed
      */
-    function index($userId, Request $request) {
+    function index(Request $request) {
         $itemsPerPage = $request->query('itemsPerPage', 10);
-        $res = $this->modelClass::where('user_id', $userId)
+        $res = $this->model::where('user_id', Auth::id())
             ->paginate($itemsPerPage)->toArray();
         $res['status'] = true;
         return response()->json($res);
@@ -31,13 +30,12 @@ class PasswordController extends BaseController
     /**
      * Show item
      *
-     * @param $id
      * @return \Illuminate\Http\JsonResponse
      */
-    function show($userId, $id): \Illuminate\Http\JsonResponse
+    function show($uuid): \Illuminate\Http\JsonResponse
     {
-        $item = $this->modelClass::where('user_id', $userId)
-            ->where('id', $id)
+        $item = $this->model::where('user_id', Auth::id())
+            ->where($this->model->getUuidKeyName(), $uuid)
             ->first();
         return response()->json(['status' => true, 'data' => $item]);
     }
@@ -48,7 +46,7 @@ class PasswordController extends BaseController
      * @param Request $request
      * @return \Illuminate\Http\JsonResponse
      */
-    function store($userId, Request $request): \Illuminate\Http\JsonResponse
+    function store(Request $request): \Illuminate\Http\JsonResponse
     {
         if (method_exists($this->validateClass, 'storeValidate')) {
             $storeValidate = call_user_func($this->validateClass . '::storeValidate');
@@ -59,8 +57,8 @@ class PasswordController extends BaseController
         }
 
         $params = $request->post();
-        $params['user_id'] = $userId;
-        $model = new $this->modelClass();
+        $params['user_id'] = Auth::id();
+        $model = new $this->model();
         $itemNew = $model->fill($params);
         $itemNew->save();
 
@@ -70,14 +68,14 @@ class PasswordController extends BaseController
     /**
      * Update item
      *
-     * @param $id
+     * @param string $uuid
      * @param Request $request
      * @return \Illuminate\Http\JsonResponse
      */
-    function update($userId, $id, Request $request): \Illuminate\Http\JsonResponse
+    function update($uuid, Request $request): \Illuminate\Http\JsonResponse
     {
-        $item = $this->modelClass::where('user_id', $userId)
-            ->where('id', $id)
+        $item = $this->model::where('user_id', Auth::id())
+            ->where($this->model->getUuidKeyName(), $uuid)
             ->first();
 
         if (!$item) {
@@ -93,13 +91,15 @@ class PasswordController extends BaseController
      * @param $id
      * @return \Illuminate\Http\JsonResponse
      */
-    function destroy($userId, Request $request): \Illuminate\Http\JsonResponse
+    function destroy(Request $request): \Illuminate\Http\JsonResponse
     {
-        $ids = $request->post('ids', []);
-        $items = $this->modelClass::where('user_id', $userId)->whereIn('id', $ids)->get();
-        $status = $this->modelClass::where('user_id', $userId)->whereIn('id', $items->pluck('id'))->delete();
-
-        return response()->json(['status' => (boolean)$status, 'data' => $items->pluck('id')]);
+        $uuidKeyName = $this->model->getUuidKeyName();
+        $uuids = $request->post('uuids', []);
+        $deleteUuids = $this->model::where('user_id', Auth::id())
+            ->whereIn($uuidKeyName, $uuids)
+            ->pluck($uuidKeyName)->toArray();
+        $overRequest = new Request([], ['uuids' => $deleteUuids]);
+        return parent::destroy($overRequest);
     }
 
     /**
@@ -108,12 +108,12 @@ class PasswordController extends BaseController
      * @param $id
      * @return \Illuminate\Http\JsonResponse
      */
-    function restore($userId, Request $request): \Illuminate\Http\JsonResponse
+    function restore(Request $request): \Illuminate\Http\JsonResponse
     {
         $ids = $request->post('ids', []);
-        $items = $this->modelClass::where('user_id', $userId)->whereIn('id', $ids)->withTrashed()->get();
-        $status = $this->modelClass::where('user_id', $userId)->whereIn('id', $items->pluck('id'))->restore();
+        $items = $this->model::where('user_id', Auth::id())->whereIn($this->model->getUuidKeyName(), $ids)->withTrashed()->get();
+        $status = $this->model::where('user_id', Auth::id())->whereIn($this->model->getUuidKeyName(), $items->pluck($this->model->getUuidKeyName()))->restore();
 
-        return response()->json(['status' => (boolean)$status, 'data' => $items->pluck('id')]);
+        return response()->json(['status' => (boolean)$status, 'data' => $items->pluck($this->model->getUuidKeyName())]);
     }
 }

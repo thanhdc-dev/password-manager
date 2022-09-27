@@ -25,7 +25,6 @@ export class PasswordComponent extends BaseComponent implements OnInit {
 
   ngOnInit(): void {
     this.actionFn['actionEdit'] = this.actionEdit.bind(this);
-    this.actionFn['actionDelete'] = this.actionDelete.bind(this);
 
     this.setColumns([
       {
@@ -60,25 +59,6 @@ export class PasswordComponent extends BaseComponent implements OnInit {
     this.getData();
   }
 
-  onPageChange(event: any) {
-    this.setPageIndex(event.pageIndex);
-    this.getData();
-  }
-
-  getData() {
-    const params = {
-      itemsPerPage: this.pageSize,
-      page: this.pageIndex + 1
-    }
-    this.setLoading(true);
-    this.passwordService.index(params).subscribe(res => {
-      this.setLoading(false);
-      if (res?.status) {
-        this.generateData(res);
-      }
-    });
-  }
-
   add(): void {
     this.dialog.open(ModalAddPasswordComponent, {
       data: { action: 'add' },
@@ -89,9 +69,9 @@ export class PasswordComponent extends BaseComponent implements OnInit {
     });
   }
 
-  actionEdit(rowId: number) {
+  actionEdit(rowUuid: string) {
     this.dialog.open(ModalAddPasswordComponent, {
-      data: { action: 'edit', id: rowId },
+      data: { action: 'edit', uuid: rowUuid },
     }).afterClosed().subscribe(result => {
       if (result) {
         this.getData();

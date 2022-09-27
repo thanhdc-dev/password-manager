@@ -25,15 +25,15 @@ export class BaseService extends HttpService {
     return this.requestCall(`${this.endPoint}`, ApiMethod.POST, params);
   }
 
-  show(id: number): Observable<any> {
-    return this.requestCall(`${this.endPoint}/${id}`, ApiMethod.GET);
+  show(uuid: string): Observable<any> {
+    return this.requestCall(`${this.endPoint}/${uuid}`, ApiMethod.GET);
   }
 
-  update(id: number, params: any): Observable<any> {
-    return this.requestCall(`${this.endPoint}/${id}`, ApiMethod.PUT, params);
+  update(uuid: string, params: any): Observable<any> {
+    return this.requestCall(`${this.endPoint}/${uuid}`, ApiMethod.PUT, params);
   }
 
-  delete(ids: number[]): Observable<any> {
-    return this.requestCall(`${this.endPoint}/`, ApiMethod.DELETE, {ids});
+  delete(uuids: string[]): Observable<any> {
+    return this.requestCall(`${this.endPoint}/`, ApiMethod.DELETE, {uuids});
   }
 }
