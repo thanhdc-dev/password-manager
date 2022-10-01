@@ -1,6 +1,7 @@
 import { Directive, Injector, OnInit } from "@angular/core";
 import { ColumnInterface } from "../table/interfaces/column.interface";
 import { ActionInterface } from '../table/interfaces/action.interface';
+import { RowInterface } from "../table/interfaces/row.interface";
 import { ModalConfirmComponent } from "../modal-confirm/modal-confirm.component";
 import { MatDialog } from "@angular/material/dialog";
 import { BaseService } from "@shared/services/base.service";
@@ -15,6 +16,7 @@ export class BaseComponent implements OnInit {
   private _total: number = 0;
   private _pageSize: number = 5;
   private _pageSizeOptions: number[] = [5, 10, 20, 100, 500];
+  public rowsChecked: RowInterface[] = [];
   public actionFn: any = {};
   dialog: MatDialog;
   service: BaseService;
@@ -101,6 +103,10 @@ export class BaseComponent implements OnInit {
     this.callFn(event.name, event.uuid);
   }
 
+  onBulkActionClicked(event: {name: string, rows: RowInterface[]}) {
+    this.callFn(event.name, '');
+  }
+
   callFn(actionName: string, uuid: string) {
     if (typeof this.actionFn[actionName] == 'function') {
       this.actionFn[actionName](uuid);
@@ -129,6 +135,7 @@ export class BaseComponent implements OnInit {
     this.service.index(params).subscribe(res => {
       this.setLoading(false);
       if (res?.status) {
+        this.rowsChecked = [];
         this.generateData(res);
       }
     });
@@ -147,7 +154,8 @@ export class BaseComponent implements OnInit {
     }).afterClosed().subscribe(isOk => {
       if (isOk) {
         this.setLoading(true);
-        this.service.delete([rowUuid]).subscribe(res => {
+        const uuids = (rowUuid) ? [rowUuid] : this.rowsChecked.map(row => row.uuid);
+        this.service.delete(uuids).subscribe(res => {
           this.setLoading(false);
           console.log(res?.status ? 'delete success' : 'delete fail');
           if (res?.status) {

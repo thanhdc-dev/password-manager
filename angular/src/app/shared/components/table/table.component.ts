@@ -1,10 +1,13 @@
+import { SelectionModel } from '@angular/cdk/collections';
 import { AfterViewInit, EventEmitter, Output } from '@angular/core';
 import { Component, Input, OnChanges, SimpleChanges, ViewChild } from '@angular/core';
+import { MatCheckbox } from '@angular/material/checkbox';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
 import { tap } from 'rxjs/operators';
 import { ActionInterface } from './interfaces/action.interface';
 import { ColumnInterface } from './interfaces/column.interface';
+import { RowInterface } from './interfaces/row.interface';
 
 @Component({
   selector: 'app-table',
@@ -20,19 +23,25 @@ export class TableComponent implements OnChanges, AfterViewInit {
   @Input() total: number = 0;
   @Input() columns: ColumnInterface[] = [];
   @Input() actions: ActionInterface[] = [];
-  @Input() dataSource: any[] = [];
+  @Input() dataSource: RowInterface[] = [];
+  @Input() rowsChecked: RowInterface[] = [];
   displayedColumns: string[] = [];
   displayedActions: ActionInterface[] = [];
+  selection = new SelectionModel<RowInterface>(true, []);
 
   @ViewChild(MatPaginator) paginator!: MatPaginator;
   @ViewChild(MatSort) sort!: MatSort;
+  @ViewChild('checkBoxToggleAllRows') checkBoxToggleAllRows!: MatCheckbox;
 
   @Output() pageChange = new EventEmitter<{pageIndex: number, pageSize: number}>();
   @Output() actionClicked = new EventEmitter<{name: string, uuid: string}>();
+  @Output() bulkActionClicked = new EventEmitter<{name: string, rows: RowInterface[]}>();
+  @Output() rowsCheckedChange = new EventEmitter<RowInterface[]>();
 
   ngOnChanges(changes: SimpleChanges): void {
     if (changes?.columns && Array.isArray(changes.columns.currentValue)) {
       this.displayedColumns = changes.columns.currentValue.map((column: ColumnInterface) => column.name);
+      this.displayedColumns.unshift('select');
       this.displayedColumns.push('action');
     }
     if (changes?.actions && Array.isArray(changes.actions.currentValue)) {
@@ -46,6 +55,16 @@ export class TableComponent implements OnChanges, AfterViewInit {
         });
         return row;
       });
+    }
+    if (changes?.rowsChecked && Array.isArray(changes.rowsChecked.currentValue)) {
+      this.selection.clear();
+      const rowsChecked = changes.rowsChecked.currentValue;
+      this.selection.select(...rowsChecked);
+      if (this.checkBoxToggleAllRows) {
+        const dataSource = changes?.rowsChecked?.currentValue ?? this.dataSource;
+        this.checkBoxToggleAllRows.checked = !!(dataSource.length && (rowsChecked.length == dataSource.length));
+        this.checkBoxToggleAllRows.indeterminate = !!(dataSource.length && rowsChecked.length && (rowsChecked.length != dataSource.length));
+      }
     }
   }
 
@@ -68,5 +87,50 @@ export class TableComponent implements OnChanges, AfterViewInit {
   onActionClicked(actionName: string, rowUuid: string) {
     console.log(`Action ${actionName} clicked`);
     this.actionClicked.emit({name: actionName, uuid: rowUuid});
+  }
+
+  /** Whether the number of selected elements matches the total number of rows. */
+  isAllSelected() {
+    const numSelected = this.selection.selected.length;
+    const numRows = this.dataSource.length;
+    return numSelected === numRows;
+  }
+
+  /** Selects all rows if they are not all selected; otherwise clear selection. */
+  toggleAllRows() {
+    if (this.isAllSelected()) {
+      this.selection.clear();
+      return;
+    }
+
+    this.selection.select(...this.dataSource);
+    this.emitRowChecked();
+  }
+
+  /**
+   * Event row checked
+   * @param row
+   */
+  onRowChecked(row: RowInterface) {
+    this.selection.toggle(row);
+    this.emitRowChecked();
+  }
+
+  /**
+   * Check hide/show action
+   */
+  isShowActionHeader(action: ActionInterface) {
+    return action?.is_bulk && (typeof action.isShow == 'undefined' || action.isShow);
+  }
+
+  /**
+   * Event action multiple clicked
+   */
+  onActionMultipleClicked(action: ActionInterface) {
+    this.bulkActionClicked.emit({name: action.name, rows: this.selection.selected});
+  }
+
+  private emitRowChecked() {
+    this.rowsCheckedChange.emit(this.selection.selected);
   }
 }

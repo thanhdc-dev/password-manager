@@ -49,11 +49,14 @@ export class PasswordComponent extends BaseComponent implements OnInit {
         title: 'Edit',
         name: 'actionEdit',
         icon: 'edit',
+        class: 'has-text-info'
       },
       {
         title: 'Delete',
         name: 'actionDelete',
         icon: 'delete',
+        class: 'has-text-danger',
+        is_bulk: true,
       }
     ])
     this.getData();

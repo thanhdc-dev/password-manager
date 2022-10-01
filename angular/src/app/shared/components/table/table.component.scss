@@ -35,11 +35,16 @@
 }
 
 .mat-column-index {
-  width: 100px;
+  width: 50px;
+}
+
+.mat-column-select {
+  width: 50px;
 }
 
 .mat-column-action {
   width: 50px;
+
   .action-container {
     opacity: 0;
     width: 0;
@@ -51,6 +56,7 @@
     transition: all 0.4s;
     background-color: #fafafa;
   }
+
   .action-trigger {
     &:hover {
       .action-container {
