@@ -17,6 +17,16 @@
         </ng-container>
       </mat-select>
     </mat-form-field>
+
+    <div class="search-input field">
+      <p class="control has-icons-right">
+        <input class="input" type="text" placeholder="keyword" name="keyword" [(ngModel)]="keyword" (keyup.enter)="onKeywordChange()">
+        <span class="icon is-small is-right">
+          <mat-icon *ngIf="!keyword">search</mat-icon>
+          <mat-icon class="is-clickable" *ngIf="keyword" (click)="resetKeyword()">close</mat-icon>
+        </span>
+      </p>
+    </div>
   </div>
 
   <table mat-table [dataSource]="dataSource" matSort matSortDirection="desc"

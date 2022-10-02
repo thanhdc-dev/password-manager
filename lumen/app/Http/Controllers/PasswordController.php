@@ -19,9 +19,17 @@ class PasswordController extends Controller
      * @return mixed
      */
     function index(Request $request) {
-        $itemsPerPage = $request->query('itemsPerPage', 10);
+        $keyword = $request->query('keyword', null);
+        $perPage = $request->query('per_page', $this->model->getPerPage());
         $res = $this->model::where('user_id', Auth::id())
-            ->paginate($itemsPerPage)->toArray();
+            ->where(function($subQuery) use ($keyword) {
+                if (!empty($keyword)) {
+                    $subQuery->where('url', 'LIKE', "%{$keyword}%");
+                    $subQuery->orWhere('username', 'LIKE', "%{$keyword}%");
+                    $subQuery->orWhere('note', 'LIKE', "%{$keyword}%");
+                }
+            })
+            ->paginate($perPage)->toArray();
         $res['status'] = true;
         return response()->json($res);
     }

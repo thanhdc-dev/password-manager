@@ -25,8 +25,8 @@ class Controller extends BaseController
      * @return mixed
      */
     function index(Request $request) {
-        $itemsPerPage = $request->query('itemsPerPage', 10);
-        return $this->model::paginate($itemsPerPage)->toArray();
+        $perPage = $request->query('per_page', $this->model->getPerPage());
+        return $this->model::paginate($perPage)->toArray();
     }
 
     /**

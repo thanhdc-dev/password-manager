@@ -11,6 +11,7 @@ import { MatButtonModule } from '@angular/material/button';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatSelectModule } from '@angular/material/select';
+import { FormsModule } from '@angular/forms';
 
 
 @NgModule({
@@ -29,6 +30,7 @@ import { MatSelectModule } from '@angular/material/select';
     MatTooltipModule,
     MatFormFieldModule,
     MatSelectModule,
+    FormsModule,
   ],
   exports: [
     TableComponent

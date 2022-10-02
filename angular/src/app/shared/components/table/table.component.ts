@@ -28,6 +28,7 @@ export class TableComponent implements OnChanges, AfterViewInit {
   displayedColumns: string[] = [];
   displayedActions: ActionInterface[] = [];
   selection = new SelectionModel<RowInterface>(true, []);
+  keyword: string = '';
 
   @ViewChild(MatPaginator) paginator!: MatPaginator;
   @ViewChild(MatSort) sort!: MatSort;
@@ -37,6 +38,7 @@ export class TableComponent implements OnChanges, AfterViewInit {
   @Output() actionClicked = new EventEmitter<{name: string, uuid: string}>();
   @Output() bulkActionClicked = new EventEmitter<{name: string, rows: RowInterface[]}>();
   @Output() rowsCheckedChange = new EventEmitter<RowInterface[]>();
+  @Output() keywordChange = new EventEmitter<string>();
 
   ngOnChanges(changes: SimpleChanges): void {
     if (changes?.columns && Array.isArray(changes.columns.currentValue)) {
@@ -128,6 +130,21 @@ export class TableComponent implements OnChanges, AfterViewInit {
    */
   onActionMultipleClicked(action: ActionInterface) {
     this.bulkActionClicked.emit({name: action.name, rows: this.selection.selected});
+  }
+
+  /**
+   * Event search data
+   */
+  onKeywordChange() {
+    this.keywordChange.emit(this.keyword);
+  }
+
+  /**
+   * Reset input search
+   */
+  resetKeyword() {
+    this.keyword = '';
+    this.onKeywordChange();
   }
 
   private emitRowChecked() {

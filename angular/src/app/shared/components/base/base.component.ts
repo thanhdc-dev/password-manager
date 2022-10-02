@@ -14,8 +14,8 @@ export class BaseComponent implements OnInit {
   private _dataSource: any = [];
   private _pageIndex: number = 0;
   private _total: number = 0;
-  private _pageSize: number = 5;
-  private _pageSizeOptions: number[] = [5, 10, 20, 100, 500];
+  private _pageSize: number = 10;
+  private _pageSizeOptions: number[] = [10, 20, 100, 500];
   public rowsChecked: RowInterface[] = [];
   public actionFn: any = {};
   dialog: MatDialog;
@@ -126,10 +126,13 @@ export class BaseComponent implements OnInit {
   /**
    * Get data from api service
    */
-  getData() {
-    const params = {
-      itemsPerPage: this.pageSize,
-      page: this.pageIndex + 1
+  getData(keyword: string = '') {
+    const params: any = {
+      per_page: this.pageSize,
+      page: this.pageIndex + 1,
+    }
+    if (keyword) {
+      params.keyword = keyword;
     }
     this.setLoading(true);
     this.service.index(params).subscribe(res => {

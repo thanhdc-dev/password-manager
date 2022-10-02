@@ -13,6 +13,7 @@ class Model extends BaseModel
     {
         parent::__construct();
         $this->makeHidden(array($this->getKeyName()));
+        $this->setPerPage(20);
     }
 
     static function boot() {
