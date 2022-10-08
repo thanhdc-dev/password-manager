@@ -1,6 +1,5 @@
 import { Injectable } from '@angular/core';
-import { Router } from '@angular/router';
-import { StorageService } from '@core/services/storage.service';
+import { CookieService } from '@core/services/cookie.service';
 
 @Injectable({
   providedIn: 'root'
@@ -11,7 +10,7 @@ export class TokenService {
   private readonly _refreshTokenKeyStorage = 'refresh_token';
 
   constructor(
-    private storage: StorageService,
+    private storage: CookieService,
   ) { }
 
   saveToken(token: string) {
