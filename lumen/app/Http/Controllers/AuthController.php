@@ -97,9 +97,7 @@ class AuthController extends Controller
             return response()->json(['status' => true, 'message' => 'Logout successfully']);
         }
         try {
-            auth()->user()->tokens()->each(function($token) {
-                $token->delete();
-            });
+            auth()->user()->token()->delete();
             return response()->json(['status' => true, 'message' => 'Logout successfully']);
         } catch (\Throwable $th) {
             return response()->json(['status' => false, 'message' => $th->getMessage()]);
