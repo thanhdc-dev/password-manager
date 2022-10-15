@@ -26,7 +26,14 @@ class Controller extends BaseController
      */
     function index(Request $request) {
         $perPage = $request->query('per_page', $this->model->getPerPage());
-        $res = $this->model::paginate($perPage)->toArray();
+        $pageType = $request->query('page_type', 'all');
+
+        if ($pageType === 'trash') {
+            $query = $this->model::onlyTrashed();
+        } else {
+            $query = $this->model::withoutTrashed();
+        }
+        $res = $query->paginate($perPage)->toArray();
         $res['status'] = true;
         return response()->json($res);
     }

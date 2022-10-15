@@ -1,0 +1,42 @@
+<div class="page">
+  <div class="is-flex is-justify-content-space-between">
+    <nav class="breadcrumb is-flex-grow-1 is-flex-shrink-1" aria-label="breadcrumbs">
+      <ul>
+        <li class="is-active"><a href="#" aria-current="page">Dashboard</a></li>
+      </ul>
+    </nav>
+    <div>
+      <button class="button is-primary" (click)="add()">Add</button>
+    </div>
+  </div>
+  <section class="section is-main-section">
+    <div class="is-flex is-justify-content-space-between">
+      <div class="tabs is-small page-tabs">
+        <ul>
+          <li [class.is-active]="pageType == 'all'">
+            <a (click)="setPageType('all')">
+              All
+            </a>
+          </li>
+        </ul>
+      </div>
+      <div class="tabs is-small page-tabs">
+        <ul>
+          <li [class.is-active]="pageType == 'trash'">
+            <a (click)="setPageType('trash')">
+              Trash
+            </a>
+          </li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="is-box-shadow">
+      <app-table [columns]="columns" [dataSource]="dataSource" [pageIndex]="pageIndex" [pageSize]="pageSize"
+        [pageSizeOptions]="pageSizeOptions" [total]="total" (pageChange)="onPageChange($event)" [actions]="actions" [(rowsChecked)]="rowsChecked"
+        (actionClicked)="onActionClicked($event)" (bulkActionClicked)="onBulkActionClicked($event)" (keywordChange)="getData($event)"
+        [isLoading]="isLoading"></app-table>
+    </div>
+  </section>
+
+</div>

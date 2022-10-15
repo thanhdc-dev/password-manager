@@ -1,0 +1,24 @@
+<h2 mat-dialog-title class="is-capitalized">{{action}} {{title}}</h2>
+<mat-dialog-content class="mat-typography">
+  <form class="box" [formGroup]="form">
+    <div class="field">
+      <label class="label">Name</label>
+      <div class="control">
+        <input class="input" [class.is-danger]="form.controls['name'].invalid" type="name"
+          placeholder="Social" formControlName="name">
+      </div>
+      <p class="help is-danger" *ngIf="form.controls['name'].hasError('required')">Name is required.</p>
+    </div>
+    <div class="field">
+      <label class="label">Note</label>
+      <div class="control">
+        <textarea class="textarea" [class.is-danger]="form.controls['note'].invalid" type="note" formControlName="note"></textarea>
+      </div>
+      <p class="help is-danger" *ngIf="form.controls['note'].hasError('required')">Password is required.</p>
+    </div>
+  </form>
+</mat-dialog-content>
+<mat-dialog-actions align="end" class="buttons">
+  <button class="button" type="button" (click)="close()">Cancel</button>
+  <button class="button is-primary" type="submit" (click)="submit()" [disabled]="form.invalid">Submit</button>
+</mat-dialog-actions>
