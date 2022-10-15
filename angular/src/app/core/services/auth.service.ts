@@ -72,7 +72,13 @@ export class AuthService extends HttpService {
     const params = { refresh_token: this._token.getRefreshToken() };
     return this.requestCall(AuthEndPoint.REFRESH_TOKEN, ApiMethod.POST, params)
       .pipe(
-        tap((res) => this._token.saveRefreshToken(res.token))
+        tap((res) => {
+          if (res?.status) {
+            this._token.saveRefreshToken(res.token)
+          } else {
+            this.doLogout();
+          }
+        })
       )
   }
 

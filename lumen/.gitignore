@@ -4,3 +4,7 @@ Homestead.json
 Homestead.yaml
 .env
 .phpunit.result.cache
+
+// Passport oauth key
+storage/oauth-private.key
+storage/oauth-public.key

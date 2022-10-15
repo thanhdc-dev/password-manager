@@ -40,6 +40,13 @@ export class PasswordComponent extends BaseComponent implements OnInit {
         }
       },
       {
+        title: 'Group',
+        name: 'group',
+        cellFn: ({ group }) => {
+          return group?.name;
+        }
+      },
+      {
         title: 'Note',
         name: 'note',
       }
@@ -74,7 +81,7 @@ export class PasswordComponent extends BaseComponent implements OnInit {
 
   actionEdit(rowUuid: string) {
     this.dialog.open(ModalAddPasswordComponent, {
-      data: { action: 'edit', uuid: rowUuid },
+      data: { action: 'edit', id: rowUuid },
     }).afterClosed().subscribe(result => {
       if (result) {
         this.getData();

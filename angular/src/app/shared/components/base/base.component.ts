@@ -99,17 +99,17 @@ export class BaseComponent implements OnInit {
     this.setDataSource(res?.data ?? []);
   }
 
-  onActionClicked(event: { name: string, uuid: string }) {
-    this.callFn(event.name, event.uuid);
+  onActionClicked(event: { name: string, id: string }) {
+    this.callFn(event.name, event.id);
   }
 
   onBulkActionClicked(event: {name: string, rows: RowInterface[]}) {
     this.callFn(event.name, '');
   }
 
-  callFn(actionName: string, uuid: string) {
+  callFn(actionName: string, id: string) {
     if (typeof this.actionFn[actionName] == 'function') {
-      this.actionFn[actionName](uuid);
+      this.actionFn[actionName](id);
     }
   }
 
@@ -147,7 +147,7 @@ export class BaseComponent implements OnInit {
   /**
    * Xóa 1 dòng dữ liệu
    */
-  actionDelete(rowUuid: string) {
+  actionDelete(rowId: string) {
     this.dialog.open(ModalConfirmComponent, {
       width: '400px',
       data: {
@@ -157,8 +157,8 @@ export class BaseComponent implements OnInit {
     }).afterClosed().subscribe(isOk => {
       if (isOk) {
         this.setLoading(true);
-        const uuids = (rowUuid) ? [rowUuid] : this.rowsChecked.map(row => row.uuid);
-        this.service.delete(uuids).subscribe(res => {
+        const ids = (rowId) ? [rowId] : this.rowsChecked.map(row => row.id);
+        this.service.delete(ids).subscribe(res => {
           this.setLoading(false);
           console.log(res?.status ? 'delete success' : 'delete fail');
           if (res?.status) {

@@ -44,6 +44,11 @@ export class SidebarComponent implements OnInit {
         path: '/password',
         icon: 'password',
       },
+      {
+        name: 'Group',
+        path: '/group',
+        icon: 'group',
+      },
     ]
   }
 

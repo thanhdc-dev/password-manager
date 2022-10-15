@@ -61,6 +61,7 @@ $app->singleton(
 
 $app->configure('auth');
 $app->configure('service');
+$app->configure('passport');
 
 /*
 |--------------------------------------------------------------------------
@@ -98,7 +99,7 @@ $app->register(App\Providers\AuthServiceProvider::class);
 $app->register(\Flipbox\LumenGenerator\LumenGeneratorServiceProvider::class);
 $app->register(Laravel\Passport\PassportServiceProvider::class);
 $app->register(Dusterio\LumenPassport\PassportServiceProvider::class);
-
+$app->register(Irazasyed\Larasupport\Providers\ArtisanServiceProvider::class);
 /*
 |--------------------------------------------------------------------------
 | Load The Application Routes

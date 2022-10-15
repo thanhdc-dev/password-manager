@@ -3,33 +3,26 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model as BaseModel;
+use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Support\Str;
 
 class Model extends BaseModel
 {
-    protected $uuidKey = 'uuid';
+    use SoftDeletes;
 
     function __construct()
     {
         parent::__construct();
-        $this->makeHidden(array($this->getKeyName()));
         $this->setPerPage(20);
+        $this->setIncrementing(false);
     }
 
     static function boot() {
         parent::boot();
 
         self::creating(function($model) {
-            $model->setAttribute($model->getUuidKeyName(), (string) Str::uuid());
+            $model->setAttribute($model->getKeyName(), (string) Str::orderedUuid());
         });
     }
 
-    function getRouteKeyName()
-    {
-        return $this->uuidKey;
-    }
-
-    function getUuidKeyName() {
-        return $this->uuidKey;
-    }
 }

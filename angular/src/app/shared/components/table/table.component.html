@@ -78,7 +78,7 @@
           <div class="action-container buttons">
             <button class="action" mat-icon-button *ngFor="let action of displayedActions"
               [matTooltip]="action.title" matTooltipPosition="above" matTooltipHideDelay="100"
-              (click)="onActionClicked(action.name, row[uuidKeyName])">
+              (click)="onActionClicked(action.name, row[idKeyName])">
               <mat-icon [ngClass]="action?.class ?? 'has-text-primary'" [style.color]="action.color">{{action.icon}}</mat-icon>
             </button>
           </div>

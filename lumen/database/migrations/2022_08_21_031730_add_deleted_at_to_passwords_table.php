@@ -14,9 +14,7 @@ class AddDeletedAtToPasswordsTable extends Migration
     public function up()
     {
         Schema::table('passwords', function (Blueprint $table) {
-            if (!Schema::hasColumn('passwords', 'deleted_at')) {
-                $table->datetime('deleted_at')->nullable();
-            }
+            $table->softDeletesTz();
         });
     }
 
@@ -28,9 +26,7 @@ class AddDeletedAtToPasswordsTable extends Migration
     public function down()
     {
         Schema::table('passwords', function (Blueprint $table) {
-            if (Schema::hasColumn('passwords', 'deleted_at')) {
-                $table->dropColumn('deleted_at');
-            }
+            $table->softDeletesTz();
         });
     }
 }

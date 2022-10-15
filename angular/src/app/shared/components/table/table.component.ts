@@ -15,7 +15,7 @@ import { RowInterface } from './interfaces/row.interface';
   templateUrl: 'table.component.html',
 })
 export class TableComponent implements OnChanges, AfterViewInit {
-  @Input() uuidKeyName: string = 'uuid';
+  @Input() idKeyName: string = 'id';
   @Input() isLoading: boolean = false;
   @Input() pageIndex: number = 0;
   @Input() pageSize: number = 5;
@@ -35,7 +35,7 @@ export class TableComponent implements OnChanges, AfterViewInit {
   @ViewChild('checkBoxToggleAllRows') checkBoxToggleAllRows!: MatCheckbox;
 
   @Output() pageChange = new EventEmitter<{pageIndex: number, pageSize: number}>();
-  @Output() actionClicked = new EventEmitter<{name: string, uuid: string}>();
+  @Output() actionClicked = new EventEmitter<{name: string, id: string}>();
   @Output() bulkActionClicked = new EventEmitter<{name: string, rows: RowInterface[]}>();
   @Output() rowsCheckedChange = new EventEmitter<RowInterface[]>();
   @Output() keywordChange = new EventEmitter<string>();
@@ -88,7 +88,7 @@ export class TableComponent implements OnChanges, AfterViewInit {
 
   onActionClicked(actionName: string, rowUuid: string) {
     console.log(`Action ${actionName} clicked`);
-    this.actionClicked.emit({name: actionName, uuid: rowUuid});
+    this.actionClicked.emit({name: actionName, id: rowUuid});
   }
 
   /** Whether the number of selected elements matches the total number of rows. */

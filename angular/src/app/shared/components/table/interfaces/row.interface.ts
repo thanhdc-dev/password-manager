@@ -1,4 +1,4 @@
 export interface RowInterface {
-  uuid: string;
+  id: string;
   [proName: string]: any;
 }

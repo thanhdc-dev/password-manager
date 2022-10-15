@@ -2,12 +2,8 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\SoftDeletes;
-
 class Password extends Model
 {
-    use SoftDeletes;
-
     function __construct()
     {
         parent::__construct();
@@ -21,5 +17,16 @@ class Password extends Model
         'password',
         'note',
         'deleted_at',
+        'group_id',
     ];
+
+    protected $appends = ['domain'];
+
+    function getDomainAttribute() {
+        return parse_url($this->url, PHP_URL_HOST);
+    }
+
+    function group() {
+        return $this->belongsTo(Group::class, );
+    }
 }
