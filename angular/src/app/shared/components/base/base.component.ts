@@ -16,6 +16,7 @@ export class BaseComponent implements OnInit {
   private _total: number = 0;
   private _pageSize: number = 10;
   private _pageSizeOptions: number[] = [10, 20, 100, 500];
+  public _page_type: string = 'all';
   public rowsChecked: RowInterface[] = [];
   public actionFn: any = {};
   dialog: MatDialog;
@@ -94,6 +95,15 @@ export class BaseComponent implements OnInit {
     this._pageSizeOptions = pageSizeOptions;
   }
 
+  get pageType(): string {
+    return this._page_type;
+  }
+
+  setPageType(pageType: string) {
+    this._page_type = pageType;
+    this.getData();
+  }
+
   generateData(res: any) {
     this.setTotal(res?.total ?? 0);
     this.setDataSource(res?.data ?? []);
@@ -130,6 +140,7 @@ export class BaseComponent implements OnInit {
     const params: any = {
       per_page: this.pageSize,
       page: this.pageIndex + 1,
+      page_type: this.pageType,
     }
     if (keyword) {
       params.keyword = keyword;

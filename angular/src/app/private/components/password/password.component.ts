@@ -3,7 +3,6 @@ import { BaseComponent } from '@shared/components/base/base.component';
 import { Component, OnInit } from '@angular/core';
 import { UserPasswordService } from '@private/services/user-password.service';
 import { ModalAddPasswordComponent } from './modals/modal-add-password/modal-add-password.component';
-import { BaseService } from '@shared/services/base.service';
 
 @Component({
   selector: 'app-password',
