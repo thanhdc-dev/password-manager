@@ -21,11 +21,16 @@ class PasswordController extends Controller
     function index(Request $request) {
         $keyword = $request->query('keyword', null);
         $pageType = $request->query('page_type', 'all');
-        if ($request->has('per_page')) {
-            $this->model->setPerPage($request->get('per_page'));
-        }
+        $perPage = $request->get('per_page', $this->model->getPerPage());
+        $groupId = $request->get('group_id', 0);
+
         $query = $this->model::with('group:id,name')
             ->where('user_id', Auth::id())
+            ->where(function($subQuery) use ($groupId) {
+                if ($groupId) {
+                    $subQuery->where('group_id', $groupId);
+                }
+            })
             ->where(function($subQuery) use ($keyword) {
                 if (!empty($keyword)) {
                     $subQuery->where('url', 'LIKE', "%{$keyword}%");
@@ -39,7 +44,7 @@ class PasswordController extends Controller
             $query = $query->withoutTrashed();
         }
 
-        $res = $query->paginate()->toArray();
+        $res = $query->paginate($perPage)->toArray();
         $res['status'] = true;
         return response()->json($res);
     }
