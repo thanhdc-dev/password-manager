@@ -22,6 +22,8 @@ class Password extends Model
 
     protected $appends = ['domain'];
 
+    protected static $orderByColumn = 'username';
+
     function getDomainAttribute() {
         return parse_url($this->url, PHP_URL_HOST);
     }

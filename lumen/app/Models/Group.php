@@ -9,4 +9,6 @@ class Group extends Model
         'name',
         'note',
     ];
+
+    protected static $orderByColumn = 'name';
 }
