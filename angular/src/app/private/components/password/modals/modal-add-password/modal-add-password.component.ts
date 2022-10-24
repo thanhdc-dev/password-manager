@@ -20,6 +20,8 @@ export class ModalAddPasswordComponent implements OnInit {
   action: string = 'add';
   title: string = 'Password';
   id: string = '';
+  isShowPassword = false;
+
   form: FormGroup = this.fb.group({
     url: [null, Validators.required],
     username: [null, Validators.required],
@@ -109,8 +111,13 @@ export class ModalAddPasswordComponent implements OnInit {
   }
 
   selectGroup() {
-    console.log(this.groupCtrl.value)
     this.form.patchValue({group_id: this.groupCtrl.value.id});
+    this.initGroupFilter();
+  }
+
+  removeGroup() {
+    this.form.patchValue({group_id: 0});
+    this.groupCtrl.reset();
     this.initGroupFilter();
   }
 }
