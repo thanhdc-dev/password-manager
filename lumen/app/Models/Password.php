@@ -24,6 +24,50 @@ class Password extends Model
 
     protected static $orderByColumn = 'username';
 
+    /**
+     * Set the username attribute.
+     *
+     * @param   mixed
+     * @return  void
+     */
+    function setUsernameAttribute($value)
+    {
+        $this->attributes['username'] = encrypt($value);
+    }
+
+    /**
+     * Retrieve the username attribute.
+     *
+     * @param   mixed
+     * @return  string
+     */
+    function getUsernameAttribute($value)
+    {
+        return decrypt($value);
+    }
+
+    /**
+     * Set the password attribute.
+     *
+     * @param   mixed
+     * @return  void
+     */
+    function setPasswordAttribute($value)
+    {
+        $this->attributes['password'] = encrypt($value);
+    }
+
+    /**
+     * Retrieve the password attribute.
+     *
+     * @param   mixed
+     * @return  string
+     */
+    function getPasswordAttribute($value)
+    {
+        return decrypt($value);
+    }
+
     function getDomainAttribute() {
         return parse_url($this->url, PHP_URL_HOST);
     }
