@@ -3,13 +3,14 @@
 namespace App\Http\Controllers;
 
 use App\Models\Password;
+use Illuminate\Support\Facades\DB;
 use Laravel\Lumen\Routing\Controller as BaseController;
 
 class DashboardPageController extends BaseController
 {
     function index() {
         $accountCount = Password::where('user_id', auth()->id())->count();
-        $passwords = Password::selectRaw("SUBSTRING_INDEX(SUBSTRING_INDEX(SUBSTRING_INDEX(SUBSTRING_INDEX(url, '/', 3), '://', -1), '/', 1), '?', 1) AS domain")
+        $passwords = DB::table('passwords')->selectRaw("SUBSTRING_INDEX(SUBSTRING_INDEX(SUBSTRING_INDEX(SUBSTRING_INDEX(url, '/', 3), '://', -1), '/', 1), '?', 1) AS domain")
             ->where('user_id', auth()->id())
             ->distinct()
             ->get()->count();
